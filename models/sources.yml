@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: DataBird_CasFinal
+  - name: sales
     schema: sales
     tables:
       - name: customers
@@ -9,6 +9,7 @@ sources:
       - name: orders
       - name: staffs
       - name: stores
+  - name: production
     schema: production
     tables:
       - name: brands
