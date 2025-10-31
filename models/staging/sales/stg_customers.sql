@@ -8,5 +8,5 @@ SELECT
   city,
   state,
   zip_code
-FROM {{{{ source('sales', 'customers') }}}}
+FROM {{ source('sales', 'customers') }}
 WHERE customer_id IS NOT NULL
