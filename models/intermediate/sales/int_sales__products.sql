@@ -13,7 +13,7 @@ SELECT
   o.customer_id,
   o.order_date
 FROM {{ ref('stg_sales__order_items') }} oi
-LEFT JOIN {{ ref('stg_production__products') }} p USING (product_id)
-LEFT JOIN {{ ref('stg_production__brands') }} b USING (brand_id)
-LEFT JOIN {{ ref('stg_production__categories') }} cat USING (category_id)
-LEFT JOIN {{ ref('stg_sales__orders') }} o USING (order_id)
+LEFT JOIN {{ ref('stg_production__products') }} p ON p.product_id = oi.product_id
+LEFT JOIN {{ ref('stg_production__brands') }} b ON b.brand_id = p.brand_id
+LEFT JOIN {{ ref('stg_production__categories') }} cat ON cat.category_id = p.category_id
+LEFT JOIN {{ ref('stg_sales__orders') }} o ON o.order_id = oi.order_id
