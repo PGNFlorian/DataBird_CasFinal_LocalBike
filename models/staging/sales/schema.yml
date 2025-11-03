@@ -1,0 +1,94 @@
+version: 2
+
+models:
+  - name: stg_sales__customers
+    description: "Contains cleaned and standardized customer information."
+    columns:
+      - name: customer_id
+        description: "Primary key, unique identifier for each customer."
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "Customer's first name."
+      - name: last_name
+        description: "Customer's last name."
+      - name: email
+        description: "Customer's email address."
+      - name: phone
+        description: "Customer's phone number."
+
+  - name: stg_sales__staffs
+    description: "Contains information about store employees."
+    columns:
+      - name: staff_id
+        description: "Primary key, unique identifier for each staff."
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        description: "Foreign key linking staff to their store."
+        tests:
+          - relationships:
+              to: ref('stg_sales__stores')
+              field: store_id
+
+  - name: stg_sales__orders
+    description: "Contains all orders placed by customers."
+    columns:
+      - name: order_id
+        description: "Primary key, unique identifier for each order."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key linking order to customer."
+        tests:
+          - relationships:
+              to: ref('stg_sales__customers')
+              field: customer_id
+      - name: staff_id
+        description: "Foreign key linking order to the staff responsible."
+        tests:
+          - relationships:
+              to: ref('stg_sales__staffs')
+              field: staff_id
+      - name: store_id
+        description: "Foreign key linking order to the store."
+        tests:
+          - relationships:
+              to: ref('stg_sales__stores')
+              field: store_id
+
+  - name: stg_sales__order_items
+    description: "Contains all items in each order with price and quantity."
+    columns:
+      - name: order_id
+        description: "Foreign key linking the item to its order."
+        tests:
+          - relationships:
+              to: ref('stg_sales__orders')
+              field: order_id
+      - name: product_id
+        description: "Foreign key linking the item to the product."
+        tests:
+          - relationships:
+              to: ref('stg_production__products')
+              field: product_id
+      - name: total
+        description: "Total amount for the order item, including discounts."
+
+  - name: stg_sales__stores
+    description: "Contains information about all stores."
+    columns:
+      - name: store_id
+        description: "Primary key, unique identifier for each store."
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Name of the store."
+      - name: city
+        description: "City where the store is located."
+      - name: state
+        description: "State where the store is located."
