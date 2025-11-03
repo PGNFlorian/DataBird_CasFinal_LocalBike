@@ -6,8 +6,8 @@ SELECT
   c.category_name,
   b.brand_name,
   stq.quantity AS stock_quantity
-FROM {{ ref('stg_stocks') }} stq
-LEFT JOIN {{ ref('stg_stores') }} st USING (store_id)
-LEFT JOIN {{ ref('stg_products') }} p USING (product_id)
-LEFT JOIN {{ ref('stg_categories') }} c USING (category_id)
-LEFT JOIN {{ ref('stg_brands') }} b USING (brand_id)
+FROM {{ ref('stg_production__stocks') }} stq
+LEFT JOIN {{ ref('stg_sales__stores') }} st USING (store_id)
+LEFT JOIN {{ ref('stg_sales__products') }} p USING (product_id)
+LEFT JOIN {{ ref('stg_production__categories') }} c USING (category_id)
+LEFT JOIN {{ ref('stg_production__brands') }} b USING (brand_id)
