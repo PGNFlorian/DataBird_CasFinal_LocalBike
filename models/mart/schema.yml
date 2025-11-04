@@ -45,4 +45,4 @@ models:
       - name: total_customer_orders
         description: "Number of unique orders placed by the customer."
       - name: total_customer_margin
-        description: "Customer margin calculated as revenue minus product cost."
+        description: "Customer margin calculated as revenue minus product cost"
