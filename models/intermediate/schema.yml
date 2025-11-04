@@ -1,0 +1,81 @@
+version: 2
+
+models:
+  - name: int_sales__orders
+    description: "Intermediate model combining orders with customer, staff, and store details to enrich sales order information."
+    columns:
+      - name: order_id
+        description: "Unique identifier for each order."
+        tests:
+          - unique
+          - not_null
+      - name: order_date
+        description: "Date when the order was placed."
+      - name: required_date
+        description: "Date when the order is required by the customer."
+      - name: shipped_date
+        description: "Date when the order was shipped."
+      - name: order_status
+        description: "Current status of the order."
+      - name: store_id
+        description: "Foreign key identifying the store where the order was placed."
+        tests:
+          - relationships:
+              to: ref('stg_sales__stores')
+              field: store_id
+      - name: staff_id
+        description: "Foreign key identifying the staff member who managed the order."
+      - name: customer_id
+        description: "Foreign key identifying the customer who placed the order."
+        tests:
+          - relationships:
+              to: ref('stg_sales__customers')
+              field: customer_id
+
+  - name: int_sales__products
+    description: "Intermediate model combining order items with product, brand, and category details for product-level sales analysis."
+    columns:
+      - name: order_id
+        description: "Foreign key linking each item to its order."
+        tests:
+          - relationships:
+              to: ref('int_sales__orders')
+              field: order_id
+      - name: product_id
+        description: "Unique identifier for each product."
+      - name: product_name
+        description: "Name of the product sold."
+      - name: brand_name
+        description: "Brand associated with the product."
+      - name: category_name
+        description: "Product category name."
+      - name: quantity
+        description: "Number of items sold."
+      - name: list_price
+        description: "List price per product."
+      - name: discount
+        description: "Discount applied to the order item."
+      - name: total
+        description: "Total sales amount for this order item (price × quantity × discount factor)."
+      - name: order_date
+        description: "Date of the related order, for temporal analysis."
+
+  - name: int_inventory_status
+    description: "Intermediate model combining stock data with store, product, brand, and category details to track inventory status."
+    columns:
+      - name: store_id
+        description: "Unique identifier of the store where the stock is located."
+        tests:
+          - not_null
+      - name: store_name
+        description: "Name of the store."
+      - name: product_id
+        description: "Unique identifier for each product in stock."
+      - name: product_name
+        description: "Name of the product."
+      - name: category_name
+        description: "Category of the product."
+      - name: brand_name
+        description: "Brand of the product."
+      - name: stock_quantity
+        description: "Current stock level for the product in the store."
