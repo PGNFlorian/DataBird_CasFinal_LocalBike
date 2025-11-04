@@ -1,81 +1,107 @@
 version: 2
 
 models:
-  - name: int_sales__orders
-    description: "Intermediate model combining orders with customer, staff, and store details to enrich sales order information."
+  - name: int_production__products
+    description: "Intermediate model combining products with their brand, category, and stock quantity per store."
     columns:
-      - name: order_id
-        description: "Unique identifier for each order."
+      - name: store_product_id
+        description: "Unique identifier for product in store"
         tests:
-          - unique
           - not_null
-      - name: order_date
-        description: "Date when the order was placed."
-      - name: required_date
-        description: "Date when the order is required by the customer."
-      - name: shipped_date
-        description: "Date when the order was shipped."
-      - name: order_status
-        description: "Current status of the order."
-      - name: store_id
-        description: "Foreign key identifying the store where the order was placed."
-        tests:
-          - relationships:
-              to: ref('stg_sales__stores')
-              field: store_id
-      - name: staff_id
-        description: "Foreign key identifying the staff member who managed the order."
-      - name: customer_id
-        description: "Foreign key identifying the customer who placed the order."
-        tests:
-          - relationships:
-              to: ref('stg_sales__customers')
-              field: customer_id
-
-  - name: int_sales__products
-    description: "Intermediate model combining order items with product, brand, and category details for product-level sales analysis."
-    columns:
-      - name: order_id
-        description: "Foreign key linking each item to its order."
-        tests:
-          - relationships:
-              to: ref('int_sales__orders')
-              field: order_id
       - name: product_id
-        description: "Unique identifier for each product."
+        description: "Unique identifier for the product."
+        tests:
+          - not_null
+          - relationships:
+              name: product_id_fk_to_products
+              arguments:
+                to: ref('stg_production__products')
+                field: product_id
       - name: product_name
-        description: "Name of the product sold."
+        description: "Name of the product."
       - name: brand_name
         description: "Brand associated with the product."
       - name: category_name
-        description: "Product category name."
-      - name: quantity
-        description: "Number of items sold."
-      - name: list_price
-        description: "List price per product."
-      - name: discount
-        description: "Discount applied to the order item."
-      - name: total
-        description: "Total sales amount for this order item (price × quantity × discount factor)."
-      - name: order_date
-        description: "Date of the related order, for temporal analysis."
-
-  - name: int_inventory_status
-    description: "Intermediate model combining stock data with store, product, brand, and category details to track inventory status."
-    columns:
+        description: "Category of the product."
       - name: store_id
-        description: "Unique identifier of the store where the stock is located."
+        description: "Identifier of the store where stock is available."
+        tests:
+          - relationships:
+              name: store_id_fk_to_stores
+              arguments:
+                to: ref('stg_sales__stores')
+                field: store_id
+      - name: quantity
+        description: "Available stock quantity for the product in the store."
+
+  - name: int_sales__orders
+    description: "Intermediate model combining order items with orders, customers, staff, and store details."
+    columns:
+      - name: order_item_id
+        description: "Unique identifier for oder and item"
         tests:
           - not_null
+          - unique
+      - name: store_product_id
+        description: "Unique identifier for product in store"
+        tests:
+          - not_null
+      - name: order_id
+        description: "Unique identifier for each order."
+        tests:
+          - not_null
+          - relationships:
+              name: order_id_fk_to_orders
+              arguments:
+                to: ref('stg_sales__orders')
+                field: order_id
+      - name: order_date
+        description: "Date when the order was placed."
+      - name: required_date
+        description: "Required delivery date for the order."
+      - name: shipped_date
+        description: "Date when the order was shipped."
+      - name: order_status
+        description: "Status of the order."
+      - name: quantity
+        description: "Quantity of the product in the order item."
+      - name: list_price
+        description: "List price per unit of the product."
+      - name: discount
+        description: "Discount applied to the product in the order."
+      - name: total
+        description: "Total amount for the order item after discount."
+      - name: store_id
+        description: "Identifier of the store where the order was placed."
+        tests:
+          - relationships:
+              name: store_id_fk_to_stores
+              arguments:
+                to: ref('stg_sales__stores')
+                field: store_id
       - name: store_name
         description: "Name of the store."
-      - name: product_id
-        description: "Unique identifier for each product in stock."
-      - name: product_name
-        description: "Name of the product."
-      - name: category_name
-        description: "Category of the product."
-      - name: brand_name
-        description: "Brand of the product."
-      - name: stock_quantity
-        description: "Current stock level for the product in the store."
+      - name: staff_id
+        description: "Identifier of the staff member handling the order."
+        tests:
+          - relationships:
+              name: staff_id_fk_to_staffs
+              arguments:
+                to: ref('stg_sales__staffs')
+                field: staff_id
+      - name: staff_name
+        description: "Full name of the staff member."
+      - name: customer_id
+        description: "Identifier of the customer who placed the order."
+        tests:
+          - relationships:
+              name: customer_id_fk_to_customers
+              arguments:
+                to: ref('stg_sales__customers')
+                field: customer_id
+      - name: customer_name
+        description: "Full name of the customer."
+      - name: customer_city
+        description: "City of the customer."
+      - name: customer_state
+        description: "State of the customer."
