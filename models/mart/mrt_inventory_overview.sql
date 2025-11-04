@@ -10,5 +10,5 @@ SELECT
     SUM(CASE WHEN inv.stock_quantity = 0 THEN 1 ELSE 0 END) AS out_of_stock_products,
     SUM(CASE WHEN inv.stock_quantity < 5 THEN 1 ELSE 0 END) AS low_stock_products
 FROM {{ ref('int_sales__inventory_status') }} inv
-GROUP BY 1,2,3,4
+GROUP BY store_id,store_name,category_name,brand_name
 ORDER BY total_stock_quantity DESC
