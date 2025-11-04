@@ -7,7 +7,7 @@ SELECT
   oi.quantity,
   oi.list_price,
   oi.discount,
-  oi.total,
+  ROUND(oi.quantity * oi.list_price * (1 - oi.discount), 2) AS total,
   o.store_id,
   o.staff_id,
   o.customer_id,
