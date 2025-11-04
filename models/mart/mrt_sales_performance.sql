@@ -1,21 +1,21 @@
 SELECT
-    o.store_id,
     o.store_name,
-    oi.category_name,
-    oi.brand_name,
-    EXTRACT(YEAR FROM oi.order_date) AS order_year,
-    EXTRACT(MONTH FROM oi.order_date) AS order_month,
-    ROUND(SUM(oi.total),2) AS total_revenue,
-    SUM(oi.quantity) AS total_quantity_sold,
-    ROUND(AVG(oi.list_price),2) AS avg_price,
-    COUNT(DISTINCT oi.order_id) AS total_orders
-FROM {{ ref('int_sales__products') }} oi
+    o.staff_name,
+    p.category_name,
+    p.brand_name,
+    o.order_date,
+    
+    ROUND(SUM(o.total),2) AS total_revenue,
+    SUM(o.quantity) AS total_quantity_sold,
+    ROUND(AVG(o.list_price),2) AS avg_price,
+    COUNT(DISTINCT o.order_id) AS total_orders,
+    ROUND(SUM(o.total - (o.quantity * o.list_price)),2) AS total_margin
+FROM {{ ref('int_production__products') }} p
 JOIN {{ ref('int_sales__orders') }} o
-  ON oi.order_id = o.order_id
+  ON o.store_product_id = p.store_product_id
 GROUP BY 
-    store_id,
     store_name,
+    staff_name,
     category_name,
     brand_name,
-    order_year,
-    order_month
+    order_date

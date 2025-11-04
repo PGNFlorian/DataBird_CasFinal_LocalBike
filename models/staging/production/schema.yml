@@ -13,15 +13,16 @@ models:
         description: "Foreign key linking product to its category."
         tests:
           - relationships:
-              to: ref('stg_production__categories')
-              field: category_id
+              arguments:
+                to: ref('stg_production__categories')
+                field: category_id
       - name: brand_id
         description: "Foreign key linking product to its brand."
         tests:
           - relationships:
-              to: ref('stg_production__brands')
-              field: brand_id
-
+              arguments:
+                to: ref('stg_production__brands')
+                field: brand_id
   - name: stg_production__categories
     description: "Contains product category information."
     columns:
@@ -47,13 +48,15 @@ models:
         description: "Foreign key linking stock to a store."
         tests:
           - relationships:
-              to: ref('stg_sales__stores')
-              field: store_id
+              arguments:
+                to: ref('stg_sales__stores')
+                field: store_id
       - name: product_id
         description: "Foreign key linking stock to a product."
         tests:
           - relationships:
-              to: ref('stg_production__products')
-              field: product_id
+              arguments:
+                to: ref('stg_production__products')
+                field: product_id
       - name: quantity
         description: "Number of units available in stock."
